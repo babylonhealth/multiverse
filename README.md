@@ -13,7 +13,7 @@ URL: https://arxiv.org/abs/1910.08091
 
 ## Citation
 
-A suggested BibTeX citation:
+A suggested BibTeX:
 
 ```
 @misc{babylon2019multiverse,
