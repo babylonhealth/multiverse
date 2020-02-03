@@ -11,7 +11,7 @@ Accepted to the 2nd Symposium on Advances in Approximate Bayesian Inference (201
 
 URL: https://arxiv.org/abs/1910.08091
 
-## Citation
+## Citation
 
 A suggested BibTeX citation:
 
