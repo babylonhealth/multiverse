@@ -7,9 +7,23 @@ This is a basic prototype implementation of probabilistic programming MultiVerse
 
 `MultiVerse: Causal Reasoning using Importance Sampling in Probabilistic Programming` by Yura Perov (equal contribution), Logan Graham (equal contribution), Kostis Gourgoulias, Jonathan G. Richens, Ciarán M. Lee, Adam Baker, Saurabh Johri.
 
-Accepted to the 2nd Symposium on Advances in Approximate Bayesian Inference (2019) and to the Second International Probabilistic Programming Conference (2020).
+Accepted to the 2nd Symposium on Advances in Approximate Bayesian Inference (2019) and to the Second International Conference on Probabilistic Programming (2020).
 
 URL: https://arxiv.org/abs/1910.08091
+
+## Citation
+
+A suggested BibTeX:
+
+```
+@misc{babylon2019multiverse,
+  title={Multi{V}erse: {C}ausal reasoning using importance sampling in probabilistic programming},
+  author={Perov, Yura and Graham, Logan and Gourgoulias, Kostis and Richens, Jonathan G. and Lee, Ciar{\'a}n M. and Baker, Adam and Johri, Saurabh},
+  url={https://arxiv.org/abs/1910.08091},
+  year={2019},
+  note={Logan and Yura have contributed equally. Accepted to the 2nd Symposium on Advances in Approximate Bayesian Inference (2019) and to the Second International Conference on Probabilistic Programming (2020).}
+}
+```
 
 
 # Tests
