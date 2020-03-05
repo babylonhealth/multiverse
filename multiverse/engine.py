@@ -393,7 +393,7 @@ class ObservableNormalERP(ObservableERP):
         self,
         mean,
         noise_std,
-        depends_on=None,
+        depends_on=[],
         noise_mean=0,
         noise_depends_on=[],
         trace_address=None,
@@ -435,7 +435,7 @@ class ObservableBernoulliERP(ObservableERP):
         self,
         input_val,
         noise_flip_prob,
-        depends_on=None,
+        depends_on=[],
         noise_depends_on=[],
         trace_address=None,
     ):
