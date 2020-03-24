@@ -522,7 +522,9 @@ def predict(expression_value, predict_counterfactual=True):
         PREDICTIONS += [expression_value]
 
 
-def run_inference_helper(model_function, num_samples, random_seed):
+def run_inference_helper(
+    model_function, model_function_kwargs, num_samples, random_seed
+):
     numpy.random.seed(datetime.now().microsecond + random_seed)
 
     global MODE
@@ -556,7 +558,7 @@ def run_inference_helper(model_function, num_samples, random_seed):
 
     # Doing the zeroth run to record positions and values
     # for `do` and `observe`.
-    model_function()
+    model_function(**model_function_kwargs)
 
     # Record appropriate addresses for the observations.
     TMP_OBSERVATIONS = OBSERVATIONS
@@ -578,7 +580,7 @@ def run_inference_helper(model_function, num_samples, random_seed):
         TRACE = {}
         PREDICTIONS = []
 
-        model_function()
+        model_function(**model_function_kwargs)
 
         RUNS += [
             {
@@ -609,7 +611,7 @@ def run_inference_helper(model_function, num_samples, random_seed):
 
             PREDICTIONS = run_info['PREDICTIONS']
 
-            model_function()
+            model_function(**model_function_kwargs)
 
             run_info['PREDICTIONS'] = PREDICTIONS
 
@@ -622,7 +624,9 @@ def run_inference_helper(model_function, num_samples, random_seed):
     return RUNS
 
 
-def run_inference(model_function, num_samples, num_cores=None):
+def run_inference(
+    model_function, num_samples, num_cores=None, model_function_kwargs={}
+):
     # TODO:
     # * Instead of running N/C samples in first mode
     #   and then in second mode, run each sample in first
@@ -652,7 +656,7 @@ def run_inference(model_function, num_samples, num_cores=None):
 
         if num_samples_pre_process > 0:
             args += [
-                (model_function, num_samples_pre_process, index)
+                (model_function, model_function_kwargs, num_samples_pre_process, index)
             ]
 
     assert sum_num_samples_to_run == num_samples
