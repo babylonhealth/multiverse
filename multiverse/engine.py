@@ -137,7 +137,13 @@ class ElementaryRandomProcess:
         self._value = value
         TRACE[self._trace_position] = value
 
-    def on_erp_init(self, depends_on):
+    def _cf_resample(self):
+        global DONE_VARIABLES_AND_DESCENDANTS
+        DONE_VARIABLES_AND_DESCENDANTS.add(self._trace_position)
+        # Note: we are resampling the value.
+        self._value = self.sample(using_proposal=False)
+
+    def on_erp_init(self, depends_on, erp_params):
         global TRACE
         global MODE
 
@@ -150,14 +156,23 @@ class ElementaryRandomProcess:
                 # `do` was applied directly:
                 self._value = TRACE[self._trace_position]
             else:
-                for ancestor in depends_on:
-                    if ancestor.get_trace_position() in DONE_VARIABLES_AND_DESCENDANTS:
-                        DONE_VARIABLES_AND_DESCENDANTS.add(self._trace_position)
-                        # Note: we are resampling the value.
-                        self._value = self.sample(using_proposal=False)
-                        break
+                if "AFFECTED_BY_CF_DO" in erp_params:
+                    # A user, at their own risk, might decide not to track
+                    # ancestors (via `depends_on`) but rather specify
+                    # what nodes are affected by the counterfactual do and
+                    # therefore must be resampled.
+                    assert erp_params["AFFECTED_BY_CF_DO"] is True
+                    self._cf_resample()
                 else:
-                    self._value = TRACE[self._trace_position]
+                    for ancestor in depends_on:
+                        if (
+                            ancestor.get_trace_position()
+                            in DONE_VARIABLES_AND_DESCENDANTS
+                        ):
+                            self._cf_resample()
+                            break
+                    else:
+                        self._value = TRACE[self._trace_position]
 
     @property
     def value(self):
@@ -198,13 +213,14 @@ class NormalERP(ElementaryRandomProcess):
         proposal_std=None,
         depends_on=[],
         trace_address=None,
+        erp_params={},
     ):
         super().__init__(trace_address=trace_address)
         self._mean = mean
         self._std = std
         self._proposal_mean = proposal_mean if proposal_mean is not None else self._mean
         self._proposal_std = proposal_std if proposal_std is not None else self._std
-        self.on_erp_init(depends_on=depends_on)
+        self.on_erp_init(depends_on=depends_on, erp_params=erp_params)
 
     def sample(self, using_proposal):
         if using_proposal:
@@ -237,6 +253,7 @@ class BernoulliERP(ElementaryRandomProcess):
         proposal_prob=None,
         depends_on=[],
         trace_address=None,
+        erp_params={},
     ):
         super().__init__(trace_address=trace_address)
         self._prob = prob
@@ -244,7 +261,7 @@ class BernoulliERP(ElementaryRandomProcess):
             self._proposal_prob = self._prob
         else:
             self._proposal_prob = proposal_prob
-        self.on_erp_init(depends_on=depends_on)
+        self.on_erp_init(depends_on=depends_on, erp_params=erp_params)
 
     def sample(self, using_proposal):
         tmp = numpy.random.uniform(0, 1, 1)[0]
@@ -282,10 +299,11 @@ class DeltaERP(ElementaryRandomProcess):
         delta_value,
         depends_on=[],
         trace_address=None,
+        erp_params={},
     ):
         super().__init__(trace_address=trace_address)
         self._delta_value = delta_value
-        self.on_erp_init(depends_on=depends_on)
+        self.on_erp_init(depends_on=depends_on, erp_params=erp_params)
 
     def sample(self, using_proposal):
         return self._delta_value
@@ -306,10 +324,11 @@ class StrictObserveDeltaERP(ElementaryRandomProcess):
         delta_value,
         depends_on=[],
         trace_address=None,
+        erp_params={},
     ):
         super().__init__(trace_address=trace_address)
         self._delta_value = delta_value
-        self.on_erp_init(depends_on=depends_on)
+        self.on_erp_init(depends_on=depends_on, erp_params=erp_params)
 
     def sample(self, using_proposal):
         return self._delta_value
