@@ -2,6 +2,8 @@
 
 This is a basic prototype implementation of probabilistic programming MultiVerse for performing counterfactual inference using importance sampling.
 
+Note that currently only one inference request at a time per Python interpret (process) is supported.
+
 
 # Paper
 
