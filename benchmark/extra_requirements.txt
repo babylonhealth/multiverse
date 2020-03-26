@@ -1,0 +1,14 @@
+cycler==0.10.0
+decorator==4.4.2
+graphviz==0.13.2
+kiwisolver==1.1.0
+matplotlib==3.2.1
+networkx==2.4
+opt-einsum==3.2.0
+pandas==1.0.3
+pyro-ppl==0.4.1
+python-dateutil==2.8.1
+pytz==2019.3
+seaborn==0.10.0
+torch==1.4.0
+tqdm==4.43.0
