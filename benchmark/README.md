@@ -21,8 +21,11 @@ There are exogenous Bernoulli nodes with a random prior.
 There are also endogenous nodes. Each endogenous node `EndogNode` has parents p1, ..., pN (which are other nodes in the network) and associated random weights w_1, ..., w_N (which are positive and sum to 1.0), and it also has its own Bernoulli noise variable `NoisyFlipper` with a random prior. The value of the endogenous node is determined as follows:
 
   `Inverse(val) = 0.0 if val else 1.0`
+  
   `InverseIf(val, predicate) = Inverse(val) if predicate else val`
+  
   `AF(p1, ..., pN) = 1.0 if Sum(w_i * p_i) > 0.5 else 0.0`
+  
   `EndogNode = InverseIf(AF(p1, ..., pN), NoisyFlipper)`
 
 There are 15 nodes in each network that are either exogenous (but not `NoisyFlipper`-s) or endogenous.
