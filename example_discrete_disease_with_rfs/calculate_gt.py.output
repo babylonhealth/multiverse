@@ -1,0 +1,6 @@
+P(Disease_One = T | Symptom = T) =  0.5500725231611272
+P(Disease_Two = T | Symptom = T) =  0.5500725231611272
+P(Disease_Three = T | Symptom = T) =  0.9025287827687809
+P(Symptom' = F | Symptom = T, do(Disease_One = F)) =  0.45002248846267556
+P(Symptom' = F | Symptom = T, do(Disease_Two = F)) =  0.45002248846267556
+P(Symptom' = F | Symptom = T, do(Disease_Three = F)) =  0.0
