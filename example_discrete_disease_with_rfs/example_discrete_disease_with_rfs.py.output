@@ -1,0 +1,75 @@
+
+This example is based on the paper ``Counterfactual diagnosis''
+by Jonathan G. Richens, Ciaran M. Lee, Saurabh Johri
+URL: https://arxiv.org/abs/1910.06772
+
+Let's say there is a risk factor RF1 that significantly increases
+the probabilities of Disease D1, Disease D2 and Disease D3. That is,
+it is likely to have any of Diseases only if RF1 is True.
+
+Let's say that:
+   RF1 ~ Bernoulli(0.01)
+   D1  ~ Bernoulli(0.2  if RF1 else 0.000001)
+   D2  ~ Bernoulli(0.2  if RF1 else 0.000001)
+   D3  ~ Bernoulli(0.95 if RF1 else 0.0001)
+
+Now, let's say that Symptom is caused only by Disease 1 and
+Disease 2 (but not Disease 3) as follows:
+   Symptom = OR(
+       Disease1 && BernoulliLeak(probTrue = 0.5)
+       OR Disease2 && BernoulliLeak(probTrue = 0.5)
+       OR BernoulliSymptomLeak(probTrue = 0.0001)
+   )
+
+Now, let's calculate posterior probabilities, in other words
+how likely that Disease X is True if the Symptom is True:
+
+   P(D1 = T | S = T)
+   0.5565563203381161
+   ***
+   P(D2 = T | S = T)
+   0.5403396905464889
+   ***
+   P(D3 = T | S = T)
+   0.9044267012390063
+
+
+You can see that the marginal posterior P(D_i = T | S = T) for each
+of three diseases is high, even though Disease 3 does not cause
+the symptom at all. This is due to the back-door path through the
+risk factor. Now, let's calculate the counter-factual query of
+
+  "How likely that the Symptom would be treated (i.e. False) in a patient
+   if initially that patient had had that Symptom and we cured
+   Disease X for sure."
+
+
+   P(S' = F | S = T, do(D1 = F))
+   0.4506726123984159
+   ***
+   P(S' = F | S = T, do(D2 = F))
+   0.44704866026098855
+   ***
+   P(S' = F | S = T, do(D3 = F))
+   0.0
+
+
+You can see that if we treated Disease 1 or Disease 2, the Symptom would
+very likely disappear (i.e. to switch to False), but if we treated
+Disease 3, it is absolutely unlikely (with probability 0.0) that
+the Symptom would disappear.
+
+Hence, Disease 3 is definitely not the cause of Symptom, while
+Disease 1 and Disease 2 might be the cause.
+
+Note that the alternative (for the posterior inference) might be to only
+consider the posterior values of diseases that are connected to positive
+symptoms and potentially filter out the other diseases. Also, care must
+be taken of incidences of diseases: appropriate probability measures
+should be used with appropriate modelling for those random variables.
+
+Also note that with multiple symptoms and if diseases are causing different
+number of symptoms, the counterfactual measure of _how many symptoms
+would be treated_ needs to be adjusted in a non-trivial way to account
+for that.
+
