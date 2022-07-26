@@ -1,3 +1,6 @@
+> **Note**
+> This repository is no longer actively maintained by Babylon Health. For further assistance, reach out to the paper authors.
+
 # MultiVerse: Probabilistic Programming Language for Causal Reasoning
 
 This is a basic prototype implementation of probabilistic programming MultiVerse for performing counterfactual inference using importance sampling.
